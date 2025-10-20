@@ -1,0 +1,16 @@
+### Planned filetree:  
+my-dev-environment/
+├── docs/                # HostArchDocs + HaveDone (rensat/strukturerat)
+├── install-scripts/     # bash / ansible / makefile för allt
+├── dotfiles/            # ~/.config/... etc
+│   ├── hypr/
+│   ├── waybar/
+│   ├── alacritty/
+│   └── ...
+├── packages/
+│   ├── pacman-packages.txt
+│   ├── aur-packages.txt
+│   └── pip-packages.txt
+├── bootstrap.sh         # 1-click installer
+├── Makefile             # make install / make update
+└── README.md            # hur allt funkar, arkitektur
