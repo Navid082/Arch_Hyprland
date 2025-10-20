@@ -1,9 +1,9 @@
 # Setting up the new environment
-This document does not contain any config files. It shows only how I went about setting setting everything about.
+This document does not contain any config files. It shows only how I went about setting setting everything up.
 
 
 ## Setup ##
-Packages installed together with hyprland:
+Packages installed together with hyprland (See HostArchDocs):
 - [X] alacritty
 - [X] tldr
 - [X] tree
@@ -22,23 +22,51 @@ Packages installed later
 - [X] pavucontrol
 - [X] 7zip
 - [X] eye of gog
-- [X] dolphin
 - [X] vim
 - [X] docker
 - [X] git
 - [X] eza - satte detta som alias i bashrc
+- [X] bat - nicer cat
 - [X] kvm/qemu + virt-manager - Ska jag dokumentera detta här eller i egen fil?
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
+- [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 
 
 
 - [ ] wl-clipboard - Går redan klippa och klistra. Behövs detta? 
 - [ ] rsync
 - [ ] ssh
-- [ ] SWAP (move to archinstallation doc?)
-- [ ] keybinding. bryt ut dina egna bindings till egen fil
+- [ ] SWAP (move to archinstallation doc after implementing?)
+- [X] keybinding. bryt ut dina egna bindings till egen fil
 - [ ] Power menu
 - [ ] Screenshot: grim (for screenshot) - slurp (for deciding pic borders) - swappy (for editing pic)
+
+---
+
+- [x] greetd + tuigreet (loginscreen + hyprland autostart)   
+
+**Double check user in /etc/passwd**  !!!!!!!!!
+
+`sudo pacman -S greetd-tuigreet`  
+
+Edit `/etc/greetd/config.toml` with the following:  
+
+`[terminal]`  
+`vt = 1`  
+`[default_session]`  
+`command = "tuigreet --time --cmd hyprland"`  
+`user = "greeter"`  
+
+Straight after greetd tuigreet is set edit bashrc for simple logout
+
+Personally I logout by typing `logout` in the terminal.  
+Do the same by editing `~/.bashrc` and add the following alias:  
+`logout ="hyprctl dispatch exit"`
+
+--- 
+
+edited grub. changed to menu style hidden and timeout to 0 for faster boot process.
+
 
 ---
 
@@ -69,25 +97,6 @@ List your monitors: `xrandr --listmonitors` : take note of monitor ID
 Mine is set to:  
 `exec-once = swaybg -o DP-1 -i ~/Pictures/Wallpapers/mt3.jpg` # Main screen  
 `exec-once = swaybg -o HDMI-A-1 -c 000000` # Secondary screen  
-
----
-
-- [x] greetd + tuigreet (loginscreen)   
-
-Double check user in /etc/passwd  
-`sudo pacman -S greetd-tuigreet`  
-
-Edit `/etc/greetd/config.toml` with the following:  
-
-`[terminal]`  
-`vt = 1`  
-`[default_session]`  
-`command = "tuigreet --time --cmd hyprland"`  
-`user = "greeter"`  
-
-Personally I logout by typing `logout` in the terminal.  
-Do the same by editing `~/.bashrc` and add the following alias:  
-`logout ="hyprctl dispatch exit"`
 
 ---
 
@@ -173,6 +182,9 @@ journalctl				- loggar
 systemd?				- bakgrundsprocesser?  
 pacman -Qe <namn>		- visa manuellt installerade paket.  
 pacman -Qi <namn>		- visa info om angivet paket  
+nohup <program> >/dev/null 2>&1 &	- Allows program to live when terminal closes
+daemon?
+
 
 suspend 				- viloläge	- satt alias i bashrc  
 logout 					- loggar ut (allting stängs av) - satt alias i bashrc  
