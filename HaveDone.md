@@ -15,6 +15,7 @@ Packages installed together with hyprland (See HostArchDocs):
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
 
+
 Packages installed later
 - [X] man-db
 - [X] discord
@@ -30,8 +31,15 @@ Packages installed later
 - [X] kvm/qemu + virt-manager - Ska jag dokumentera detta här eller i egen fil?
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
-- [X] keybinding. bryt ut dina egna bindings till egen fil
+- [ ] thunderbird for emails.
 
+
+Other
+- [X] Keybinding. Break out your bindings to a seperate file.
+- [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
+
+
+Todo:
 - [ ] wl-clipboard - Går redan klippa och klistra. Behövs detta? 
 - [ ] SWAP (move to archinstallation doc after implementing?)
 - [ ] Power menu
@@ -49,9 +57,7 @@ Packages installed later
 ---
 
 - [x] greetd + tuigreet (loginscreen + hyprland autostart)   
-
-**Double check user in /etc/passwd**  !!!!!!!!!
-
+**Double check user in /etc/passwd**
 `sudo pacman -S greetd-tuigreet`  
 
 Edit `/etc/greetd/config.toml` with the following:  
@@ -69,11 +75,6 @@ Do the same by editing `~/.bashrc` and add the following alias:
 `logout ="hyprctl dispatch exit"`
 
 --- 
-
-edited grub. changed to menu style hidden and timeout to 0 for faster boot process.
-
-
----
 
 - [x] waybar  (statusbar)
 
@@ -93,7 +94,6 @@ This will autostart waybar whenever hyprland executes. i.e when logging in.
 ---
 
 - [x] swaybg (wallpaper)
-
 In **~/.config/hypr/autostart.conf** add the following:  
 `exec-once = swaybg -c 000000` which will set background to black at login.  
 
@@ -106,7 +106,6 @@ Mine is set to:
 ---
 
 - [x] swaylock (lockscreen)  
-
 Swaylock per default have a bright grey lockscreen.
 I set mine to black with keybinding.  
 Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:  
@@ -115,18 +114,14 @@ Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:
 
 ---
 
-- [x] alacritty  
-
+- [x] alacritty / kitty
 Installed font for alacritty: `ttf-jetbrains-mono-nerd`  
-create and config in ~/.config/alacritty/alacritty.toml
-
+create and config in ~/.config/alacritty/alacritty.toml  
 **Starship:**  
 Following the "guide" from the official site: https://starship.rs/guide/  
 1. curl -sS https://starship.rs/install.sh | sh
 2. Added the following to the end of `~/.bashrc`:  
-`eval "$(starship init bash)"`
-
-
+`eval "$(starship init bash)"`  
 **eza:**  
 Tried Omarchy, liked how it displayed `ls`. I did the same.  
 1. Install eza.  
@@ -149,7 +144,6 @@ The right directory was found here:
 ---
 
 - [x] wofi (menu)  
-
 Edit `**~/.config/hypr/hyprland:**  
 1. Under **MY PROGRAMS** add the follwing:  
 `$menu = wofi --show drun --sort-order=alphabetical`  
@@ -225,7 +219,6 @@ Start `Bluetooth Manager` through wofi.
 ---  
 
 - [X] Sound.
-
 `pactl info | grep "Server Name"` ger output:    
 `Server Name: PulseAudio (on PipeWire 1.4.9)`  
 
