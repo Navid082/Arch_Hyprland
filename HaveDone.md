@@ -15,6 +15,7 @@ Packages installed together with hyprland (See HostArchDocs):
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
 
+
 Packages installed later
 - [X] man-db
 - [X] discord
@@ -30,23 +31,33 @@ Packages installed later
 - [X] kvm/qemu + virt-manager - Ska jag dokumentera detta här eller i egen fil?
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
+- [ ] thunderbird for emails.
 
 
+Other
+- [X] Keybinding. Break out your bindings to a seperate file.
+- [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
 
+
+Todo:
 - [ ] wl-clipboard - Går redan klippa och klistra. Behövs detta? 
-- [ ] rsync
-- [ ] ssh
 - [ ] SWAP (move to archinstallation doc after implementing?)
-- [X] keybinding. bryt ut dina egna bindings till egen fil
 - [ ] Power menu
 - [ ] Screenshot: grim (for screenshot) - slurp (for deciding pic borders) - swappy (for editing pic)
+- [ ] Skärmdelning
+- [ ] USB ska kunna gå att läsa
+- [ ] rsync
+- [ ] ssh
+- [ ] tailscale?
+- [ ] wireshark?
+- [ ] packettracer?
+- [ ] docker
+
 
 ---
 
 - [x] greetd + tuigreet (loginscreen + hyprland autostart)   
-
-**Double check user in /etc/passwd**  !!!!!!!!!
-
+**Double check user in /etc/passwd**
 `sudo pacman -S greetd-tuigreet`  
 
 Edit `/etc/greetd/config.toml` with the following:  
@@ -64,11 +75,6 @@ Do the same by editing `~/.bashrc` and add the following alias:
 `logout ="hyprctl dispatch exit"`
 
 --- 
-
-edited grub. changed to menu style hidden and timeout to 0 for faster boot process.
-
-
----
 
 - [x] waybar  (statusbar)
 
@@ -88,7 +94,6 @@ This will autostart waybar whenever hyprland executes. i.e when logging in.
 ---
 
 - [x] swaybg (wallpaper)
-
 In **~/.config/hypr/autostart.conf** add the following:  
 `exec-once = swaybg -c 000000` which will set background to black at login.  
 
@@ -101,7 +106,6 @@ Mine is set to:
 ---
 
 - [x] swaylock (lockscreen)  
-
 Swaylock per default have a bright grey lockscreen.
 I set mine to black with keybinding.  
 Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:  
@@ -110,18 +114,14 @@ Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:
 
 ---
 
-- [x] alacritty  
-
+- [x] alacritty / kitty
 Installed font for alacritty: `ttf-jetbrains-mono-nerd`  
-create and config in ~/.config/alacritty/alacritty.toml
-
+create and config in ~/.config/alacritty/alacritty.toml  
 **Starship:**  
 Following the "guide" from the official site: https://starship.rs/guide/  
 1. curl -sS https://starship.rs/install.sh | sh
 2. Added the following to the end of `~/.bashrc`:  
-`eval "$(starship init bash)"`
-
-
+`eval "$(starship init bash)"`  
 **eza:**  
 Tried Omarchy, liked how it displayed `ls`. I did the same.  
 1. Install eza.  
@@ -144,7 +144,6 @@ The right directory was found here:
 ---
 
 - [x] wofi (menu)  
-
 Edit `**~/.config/hypr/hyprland:**  
 1. Under **MY PROGRAMS** add the follwing:  
 `$menu = wofi --show drun --sort-order=alphabetical`  
@@ -174,22 +173,70 @@ Files I hidden from wofi:
 
 ---
 
-## findings - info - whatever ##
+- [X] Lägg till två extra diskar.  
+Lista alla diskar och partitioner:  
+`lsblk`  
 
-killall [namn]			- dödar program/processer?  
-pk -9 [namn]			- dödar program/processer?  
-journalctl				- loggar  
-systemd?				- bakgrundsprocesser?  
-pacman -Qe <namn>		- visa manuellt installerade paket.  
-pacman -Qi <namn>		- visa info om angivet paket  
-nohup <program> >/dev/null 2>&1 &	- Allows program to live when terminal closes
-daemon?
+notera diskar och partitioner. Det står inte men dess fulla namn är /dev/***. Ex /dev/sdb för hela disken eller /dev/sdb1 för partitionen.  
 
+Skapa monteringspunkt:  
+`sudo mkdir /data`  
 
-suspend 				- viloläge	- satt alias i bashrc  
-logout 					- loggar ut (allting stängs av) - satt alias i bashrc  
-sudo reboot now 		- startar om  
-sudo shutdown now 		- stänger av  
+montera disken dit - disken måste ha ett filsystem först:  
+Om disken har gamla partitioner: rensa med sudo `gdisk` /dev/sdx (x → z → y → y) eller skapa ny partition med `n` i `gdisk`.
+`sudo mkfs.ext4 /dev/sdb1`  
+`sudo mount /dev/sdb1 /data`  
+kolla så att det fungerar med `lsblk`  
 
 
+`sudo blkid /dev/sdb1` kopiera UUID utan citattecken:  
+Lägg in i `/etc/fstab`  
+# /dev/sdb1  
+UUID=<UUID för partitionen här>   /data   ext4   defaults   0   2
+
+Ladda om och testa:  
+`sudo systemctl daemon-reload`  
+`sudo mount -a`  
+
+Verifiera:  
+`lsblk`
+
+Byt ägarskap (om root ska äga men användare ska skriva):  
+Kontrollera grupper med `groups`  
+`sudo chown root:<rätt grupp> /data`  
+`sudo chmod 775 /data`  
+
+---
+
+- [X] Bluetooth. Kunna ansluta saker och ting.  
+`sudo pacman -S bluez bluez-utils`  
+`lsmod | grep btusb` (lsmod visar modulers status)
+`sudo systemctl start bluetooth.service`  
+`sudo systemctl enable bluetooth.service`  
+`sudo pacman -S blueman` för GUI.  
+Start `Bluetooth Manager` through wofi.  
+
+---  
+
+- [X] Sound.
+`pactl info | grep "Server Name"` ger output:    
+`Server Name: PulseAudio (on PipeWire 1.4.9)`  
+
+sudo pacman -S  pipewire-audio 
+                pipewire-pulse 
+                pipewire-alsa 
+                wireplumber 
+                pipewire-jack 
+                bluez 
+                bluez-utils 
+                bluez-plugins
+
+systemctl --user enable --now pipewire pipewire-pulse wireplumber
+systemctl --user restart pipewire wireplumber
+
+pactl list cards | grep -A2 "bluez_card"
+pavucontrol.
+
+  496  pactl list cards | grep -A15 "bluez_card"
+  497  pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink
 
