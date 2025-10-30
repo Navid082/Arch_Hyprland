@@ -240,3 +240,8 @@ pavucontrol.
   496  pactl list cards | grep -A15 "bluez_card"
   497  pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink
 
+
+# Check `systemctl status`  
+There are three services running for sound. Understand this.  
+`systemctl status | grep pipewire`  
+`systemctl status | grep wireplumber`

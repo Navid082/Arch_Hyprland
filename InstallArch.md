@@ -1,37 +1,40 @@
 # Installing Linux Arch and Hyprland
-### This document contains in order of how I went about installing Arch Linux and hyprland
+### This document contains in order of how I went about installing Arch Linux  
+Firstly, create a bootable usb-drive with arch .iso. Then boot into that drive through boot settings in your BIOS.  
+
+**Requirements:**  
+[Per the arch wiki](https://wiki.archlinux.org/title/Installation_guide)  
+1. A x86_64-compatible machine.  
+2. Minimun of 512 MiB RAM.  
+3. 2 GiB of disk space.  
+4. Internet connection
+
+---  
 
 
-## Arch:
-loadkeys sv-latin1
-setfont ter-132b
-
-internet with kable required
-ping archlinux/8.8.8.8
-
-Set timedatectl
-timedatectl set-timezone Europe/Stockholm
+### 0. Initial setup:
+Load the swedish keyboard layout. Set bigger font. Set correct timezone.  
+`loadkeys sv-latin1`  
+`setfont ter-132b`  
+`timedatectl set-timezone Europe/Stockholm`  
 
 ### 1. Setup the network in the USB environment.
 Create the file 20-wired.network:  
 `$ nano /etc/systemd/network/20-wired.network`  
-With the following:
-  
+Enter the following content:  
 [Match]  
 Name=enp*  
 [Network]  
-DHCP=yes
-
----
-
-
-### 2. Restart the network services  
+DHCP=yes  
+  
+Restart the network services so that it loads the changes.  
 `systemctl restart systemd-networkd`  
 `systemctl restart systemd-resolved`  
 
----
+--- 
 
-### 3. Partitioning.
+### 2. Diskmanagement.
+We need a place to install everything. 
 List all partitions with `lsblk` and take note of identifiers (/dev/vda or /dev/sdb etc)  
 
 1. Use the tool `gdisk` to do the partitioning.  
