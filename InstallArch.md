@@ -1,5 +1,5 @@
 # Installing Linux Arch and Hyprland
-### This document contains in order of how I went about installing Arch Linux  
+### This document contains my execution log of how I went about installing Arch Linux.  
 Firstly, create a bootable usb-drive with arch .iso. Then boot into that drive through boot settings in your BIOS.  
 
 **Requirements:**  
@@ -7,18 +7,19 @@ Firstly, create a bootable usb-drive with arch .iso. Then boot into that drive t
 1. A x86_64-compatible machine.  
 2. Minimun of 512 MiB RAM.  
 3. 2 GiB of disk space.  
-4. Internet connection
+4. Internet connection  
 
 ---  
 
 
-### 0. Initial setup:
-Load the swedish keyboard layout. Set bigger font. Set correct timezone.  
-`loadkeys sv-latin1`  
-`setfont ter-132b`  
-`timedatectl set-timezone Europe/Stockholm`  
+### 0. Initial setup: 
+`loadkeys sv-latin1` - Load swedish keyboard.  
+`setfont ter-132b` - Set bigger font.  
+`timedatectl set-timezone Europe/Stockholm` - Set correct timezone.  
 
-### 1. Setup the network in the USB environment.
+---
+
+### 1. Setup the network in the USB environment.  
 Create the file 20-wired.network:  
 `$ nano /etc/systemd/network/20-wired.network`  
 Enter the following content:  
@@ -27,158 +28,168 @@ Name=enp*
 [Network]  
 DHCP=yes  
   
-Restart the network services so that it loads the changes.  
+Restart the network services so that it loads the changes:  
 `systemctl restart systemd-networkd`  
 `systemctl restart systemd-resolved`  
 
+**Will use Network Manager instead of systemd when installation is finished**  
+
 --- 
 
-### 2. Diskmanagement.
-We need a place to install everything. 
-List all partitions with `lsblk` and take note of identifiers (/dev/vda or /dev/sdb etc)  
+### 2. Diskmanagement. 
+**OBS No SWAP implemented in this installation process. But highly recommended for hibernation**  
 
-1. Use the tool `gdisk` to do the partitioning.  
-If you want to clear all partitions, use the expertmode by entering "x" then "z".  
-Approve both questions when prompted.
+`fdisk -l` - Show detailed disk info.  
+`lsblk` - Show disk overview  
+`gdisk` - Partition tool  
+
+**OPTIONAL, WIPE DISK:**  
+`gdisk /dev/sdx`    
+`x`  
+`z`  
+`y`  
+`y`
+
+**Create partitions:**  
+List disks `fdisk -l` or `lsblk`.  
+Then use `gdisk` to create the following two partitions on your drive:  
+
+| Partition | Size | Code | Purpose |
+|---|---|---|---|
+| 1 | +1GB | ef00 | /boot|
+| 2 | rest | 8300(default) | root |             
 
 
-2. Partitioning the drive - OBS No SWAP implemented because installation is on VM:    
-Använd `fdisk -l` eller `lsblk` för att lista diskarna.
+**Format filesystems on each partition:**     
+`$ mkfs.fat -F 32 /dev/nvme0n1p1`       - Format boot-partition to fat32  
+`$ mkfs.ext4 /dev/nvme0n1p2`            - Format root-partition to ext4  
 
-        Använd sedan `gdisk` för att skapa följande två partitioner på `/dev/vda`:  
-        `/boot`  -Last sector: +1G	OSB SÄTT RÄTT HEXKOD    - Hex code: ef00  
-        `/`      -Last sector: Resten av disken		- Hex code: 8300
-    		
-    		
-### 3. Formatera filsystem och montera
-    `$ mkfs.fat -F 32 /dev/nvme0n1p1` (/boot partitionen)     - boot måste vara fat32
-    `$ mkfs.ext4 /dev/nvme0n1p2` (root partitionen)
-
-
-	Montera partitioner
-    `$ fdisk -l`    - lista partitionerna igen.
-    Montera partitionen /mnt/boot för /boot. /mnt för root.
-    `$ mount /dev/nvme0n1p2 /mnt`
-    `$ mkdir /mnt/boot`
-    `$ mount /dev/nvme0n1p1 /mnt/boot
+**Mount partitions:**
+`$ fdisk -l`                            - list all partitions.  
+`$ mount /dev/nvme0n1p2 /mnt`           - /mnt for root.  
+`$ mkdir /mnt/boot`                     - Create dir for boot
+`$ mount /dev/nvme0n1p1 /mnt/boot`      - /mnt/boot for /boot
+`lsblk`                                 - Verify mountpoints.
     
-
-### 4. Installation
-	`$ pacstrap -K /mnt base linux linux-firmware intel-ucode networkmanager sudo nano`
-
-### 5. Generera fstab
-	`$ genfstab -U /mnt >> /mnt/etc/fstab`
-
-	Kontrollera att båda partitionerna finns
-	cat /mnt/etc/fstab
-	
-	
-### 6. Hoppa in i chroot
-
-        arch-chroot /mnt
-
-        Sätt den nuvarande tiden som lokaltid.
-        `$ ln -sf /usr/share/zoneinfo/Europe/Stockholm /etc/localtime`
-        
-	Synkar klockan till BIOS.
-        `$ hwclock --systohc`
-
-        Sätt språk systemet ska ha stöd för:
-        `$ nano /etc/locale.gen`  - Avkommentera en_US.UTF-8 UTF-8 och sv_SE.UTF-8 UTF-8
-        `$ locale-gen`
-
-        Sätt den systemtext du vill ha.
-        `$ echo "LANG=en_US.UTF-8" > /etc/locale.conf`
-
-        Sätt tangentbordslayout för det nya systemet:
-        `$ echo "KEYMAP=sv-latin1" > /etc/vconsole.conf`
-
-        Sätt unikt namn för maskinen på ett nätverk:
-        `$ echo "forge" > /etc/hostname`
-        
-    	Set a password for root.
-        `$ passwd`
-
-	Bootloader - GRUB
-        Installera GRUB ocgh EFI-verktyg
-        `$ pacman -S grub efibootmgr`
-
-        Installera grub där du har din efi-system-partition
-        `$ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB`
-
-        Generera GRUB-konfigurationen
-        `$ grub-mkconfig -o /boot/grub/grub.cfg`
-        
-        Kontrollera att mikrocode följer med i GRUB
-        `$ grep intel-ucode /boot/grub/grub.cfg`
-        
-        kontrollera att grub är listad som boot option
-        `$ efibootmgr`
-        
-        Lämna chroot, stäng av, ta ut USB-stickan så den ej läses in vid start och Starta.
-        `$ exit`
-        `$ poweroff`
-        
-
-### 7. Lås root
-        Skapa ett nytt användarkontot [namn]:
-        `$ useradd -m -G wheel -s /bin/bash [namn]`
-
-        Ge kontot ett lösenord:
-        `$ passwd [namn]`
-
-        Redigera i /etc/sudoers. 
-        Avkommentera raden som ger användare i wheel gruppen behöriget kör vilket kommando de vill:
-        `$ EDITOR=nano visudo`
-        Denna rad --> %wheel ALL=(ALL:ALL) ALL
-
-        Växla till det nya användarkontot:
-        `$ su [namn]`
-
-        Inaktivera root-inloggning genom att låsa root-kontot:
-        `$ sudo passwd -l root`
-        
-
-### 8. Fixa nätverket IGEN
 ---
-LAPTOP:  
-Istället för segmentet under. Fixa jag på min laptop networkmanager.
-sudo pacman -S networkmanager --> ansluter till wifi genom `nmtui`  
+
+### 3. Installation  
+**Base system install**  
+`$ pacstrap -K /mnt base linux linux-firmware intel-ucode networkmanager sudo nano`
+
+---
+
+### 4. Generera fstab
+`$ genfstab -U /mnt >> /mnt/etc/fstab`  - Write auto-mounts to file
+
+`cat /mnt/etc/fstab`                    - Verfy UUIDs and mountpoints are correct  
 
 ---  
 
-Stationära:  
-	- Skapa filen:
-        `$ nano /etc/systemd/network/20-wired.network`
+### 5. Chroot
+`arch-chroot /mnt`                      - Enter into installation directory  
 
-        Lägg till följande i filen:
-        [Match]
-        Name=enp*
-        [Network]
-        DHCP=yes
+`$ ln -sf /usr/share/zoneinfo/Europe/Stockholm /etc/localtime`  - Set current time as localtime  
+
+`$ hwclock --systohc`                   - Sync clock to BIOS
+
+Set system language support:  
+`$ nano /etc/locale.gen`                - Uncomment `en_US.UTF-8 UTF-8` and `sv_SE.UTF-8 UTF-8`  
+
+`$ locale-gen`                          - Activates language characters for chosen languages  
+
+`$ echo "LANG=en_US.UTF-8" > /etc/locale.conf`          - Set system language
+
+`$ echo "KEYMAP=sv-latin1" > /etc/vconsole.conf`        - Set keyboardlayout  
+
+`$ echo "forge" > /etc/hostname`        - Name machine "forge"  
+
+`$ passwd`                              - Set password for root-user.
+
+
+**Bootloader - GRUB**  
+`$ pacman -S grub efibootmgr`           - Install GRUB and EFI-tools  
+
+`$ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB`  - Install GRUB in /boot  
+
+`$ grub-mkconfig -o /boot/grub/grub.cfg`        - Genererate GRUB-configuration
+
+`$ grep intel-ucode /boot/grub/grub.cfg`        - Confirm microcode is included
+
+`$ efibootmgr`                                  - Confirm GRUB is listed as boot-option
+
+`$ exit`                                        - Exit chroot
+
+`$ poweroff`                                    - Shutdown system and remove USB-drive
+
+**Start system, choose Arch in GRUB meny and log into `root` with the password you set**
         
-        - Starta om nätverkstjänsterna:
-	systemctl restart systemd-networkd
-	systemctl restart systemd-resolved
-	
 ---
 
-### 9. Hyprland
+### 6. Lock root-user  
+After this step use only the new account you created.  
 
-        Laptop:
-        `$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree btop curl eza`
-        Valde pipewire-jack här också
+`$ useradd -m -G wheel -s /bin/bash [name]`     - Create a new user account
+
+`$ passwd [name]`                               - Set password
+
+`$ EDITOR=nano visudo`                          - Uncomment this row: `%wheel ALL=(ALL:ALL) ALL`
+
+`$ su [name]`                                   - Change into the new user-account
+
+`$ sudo passwd -l root`                         - deactivate login into root account
+        
+---
+
+### 7. Network setup
+---
+**Option 1:** NetworkManager (recommended)  
+`systemctl status NetworkManager`               - Check spelling. Enable for start at system boot.
+`nmtui`                                         - Connect wifi/wire  
+
+**Option 2:** systemd-networkd (wired)  
+`$ nano /etc/systemd/network/20-wired.network`  - Create this file  
+With this content:  
+[Match]  
+Name=enp*  
+[Network]  
+DHCP=yes  
+        
+`systemctl restart systemd-networkd`             - Restart network services  
+`systemctl restart systemd-resolved`
+
+---
+
+### 8. Hyprland
+Laptop:
+`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree btop curl eza`
+Valde pipewire-jack här också
+
+- greetd + tuigreet för hyprland autostart.
+
+
+Stationära:
+`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl`
+Välj pipewire-jack när efterfrågad.
 
         - greetd + tuigreet för hyprland autostart.
 
 
-        Stationära:
-        `$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl`
-        Välj pipewire-jack när efterfrågad.
 
-         - greetd + tuigreet för hyprland autostart.
+
+
+
+
+
+
+
+
+
+
+
 
 ---
+
 
 Både laptop/stationär:  
 För snabbare bootprocess. Ändra i `etc/default/grub` så att grub menyn ej visas.
