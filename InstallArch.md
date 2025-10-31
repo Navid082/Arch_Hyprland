@@ -75,7 +75,8 @@ Then use `gdisk` to create the following two partitions on your drive:
 
 ### 3. Installation  
 **Base system install**  
-`$ pacstrap -K /mnt base linux linux-firmware intel-ucode networkmanager sudo nano`
+`$ pacstrap -K /mnt base linux linux-firmware intel-ucode`  - amd-ucode for amd processor.
+
 
 ---
 
@@ -126,7 +127,11 @@ Set system language support:
         
 ---
 
-### 6. Lock root-user  
+### 6. Setup base environment
+- Install necessary packages:
+`sudo pacman -S networkmanager sudo nano`  
+
+- Lock root-user  
 After this step use only the new account you created.  
 
 `$ useradd -m -G wheel -s /bin/bash [name]`     - Create a new user account
@@ -139,13 +144,11 @@ After this step use only the new account you created.
 
 `$ sudo passwd -l root`                         - deactivate login into root account
         
----
+- Network setup
 
-### 7. Network setup
----
 **Option 1:** NetworkManager (recommended)  
-`systemctl status NetworkManager`               - Check spelling. Enable for start at system boot.
-`nmtui`                                         - Connect wifi/wire  
+`systemctl enable --now NetworkManager`         - Check spelling. Enable for start at system boot.  
+`nmtui`                                         - Connect wifi/ethernet
 
 **Option 2:** systemd-networkd (wired)  
 `$ nano /etc/systemd/network/20-wired.network`  - Create this file  
@@ -160,66 +163,15 @@ DHCP=yes
 
 ---
 
-### 8. Hyprland
-Laptop:
-`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree btop curl eza`
-Valde pipewire-jack här också
+### 7. Hyprland
+- Install packages:  
+`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl eza`  
+Choose `pipewire-jack` when prompted.  
 
-- greetd + tuigreet för hyprland autostart.
+--- 
 
-
-Stationära:
-`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl`
-Välj pipewire-jack när efterfrågad.
-
-        - greetd + tuigreet för hyprland autostart.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----
-
-
-Både laptop/stationär:  
-För snabbare bootprocess. Ändra i `etc/default/grub` så att grub menyn ej visas.
-Sedan generera om grubs konfiguration:
-`$ grub-mkconfig -o /boot/grub/grub.cfg`
-
-
-Hyprland (för båda laptop och stationära):  
-Kopiera över configfilen  
-mkdir ~/.config ~/.config/hypr  
-`$ cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf`  
-
-Inledande KONFIGURERING:   
-`$ nano ~/.config/hypr/hyprland.conf`  
-
-Ändra tangentbordet till svenskt:  
-`input {`  
-    `kb_layout = se`  
-`}`
-
-
-
-
-Ändra värdet på terminalen till alacritty som terminal under MY PROGRAMS  
-- Ändra kb_layout = en till se under INPUT  
-- Satte terminal till $mainMOD + RETURN  
-- Satte killactive till $mainMOD + Q  
-- Ändra menu(wofi) till $mainMOD + E  
-- Ändra filemanager till $mainmod + F  
-
-  
-    
-    
+- Configuration file  
+Default configuration file might not be copied over to `~/.config/`  
+Copy them over:  
+`mkdir ~/.config ~/.config/hypr`  
+`cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf`
