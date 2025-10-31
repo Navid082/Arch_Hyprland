@@ -22,6 +22,7 @@ Packages installed later
 - [X] spotify
 - [X] pavucontrol
 - [X] 7zip
+- [X] libreoffice-still
 - [X] eye of gog
 - [X] vim
 - [X] docker
@@ -53,6 +54,34 @@ Todo:
 - [ ] packettracer?
 - [ ] docker
 
+
+--------------------------------------------------
+- [X] Hyprland
+- Install packages:  
+`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl eza`  
+Choose `pipewire-jack` when prompted.
+
+- Configuration file  
+Default configuration file might not be copied over to `~/.config/`  
+Copy them over:  
+`mkdir ~/.config ~/.config/hypr`  
+`cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf`
+
+---
+
+- [X] SWAP
+Rekommenderat att det är lika stort som maskinens RAM.  
+Kernel kommer försöka komprimera men finns inte garantier att det lyckas.  
+
+Swap-fil är att rekommendera före swap-partitionering eftersom man kan enkelt ändra dess storlek.  
+
+
+Skapande av swapfil för maskin med 32GB RAM:
+`mkswap -U clear --size 32G --file /swapfile`
+
+Lägg till en post för swapfile i fstab för automontering.  
+`nano /etc/fstab`  
+`/swapfile none swap defaults 0 0 `
 
 ---
 
