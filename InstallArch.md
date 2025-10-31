@@ -1,13 +1,14 @@
 # Installing Linux Arch and Hyprland
-### This document contains my execution log of how I went about installing Arch Linux.  
-Firstly, create a bootable usb-drive with arch .iso. Then boot into that drive through boot settings in your BIOS.  
+This guide documents exactly how I installed a Arch Linux system.
+Commands are minimal and ordered. No automated scripts or shortcuts used.
 
 **Requirements:**  
 [Per the arch wiki](https://wiki.archlinux.org/title/Installation_guide)  
-1. A x86_64-compatible machine.  
-2. Minimun of 512 MiB RAM.  
-3. 2 GiB of disk space.  
-4. Internet connection  
+1. Bootable USB-drive with arch.iso 
+2. A x86_64-compatible machine.  
+3. Minimun of 512 MiB RAM.  
+4. 2 GiB of disk space.  
+5. Ethernet internet connection.  
 
 ---  
 
@@ -36,7 +37,7 @@ Restart the network services so that it loads the changes:
 
 --- 
 
-### 2. Diskmanagement. 
+### 2. Disk management. 
 **OBS No SWAP implemented in this installation process. But highly recommended for hibernation**  
 
 `fdisk -l` - Show detailed disk info.  
@@ -83,7 +84,7 @@ Then use `gdisk` to create the following two partitions on your drive:
 ### 4. Generera fstab
 `$ genfstab -U /mnt >> /mnt/etc/fstab`  - Write auto-mounts to file
 
-`cat /mnt/etc/fstab`                    - Verfy UUIDs and mountpoints are correct  
+`cat /mnt/etc/fstab`                    - Verify UUIDs and mountpoints are correct  
 
 ---  
 
@@ -123,11 +124,11 @@ Set system language support:
 
 `$ poweroff`                                    - Shutdown system and remove USB-drive
 
-**Start system, choose Arch in GRUB meny and log into `root` with the password you set**
+**Start system, choose Arch in GRUB menu and log into `root` with the password you set**
         
 ---
 
-### 6. Setup base environment
+### 6. Post-install setup.
 - Install necessary packages:
 `sudo pacman -S networkmanager sudo nano`  
 
@@ -160,18 +161,3 @@ DHCP=yes
         
 `systemctl restart systemd-networkd`             - Restart network services  
 `systemctl restart systemd-resolved`
-
----
-
-### 7. Hyprland
-- Install packages:  
-`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl eza`  
-Choose `pipewire-jack` when prompted.  
-
---- 
-
-- Configuration file  
-Default configuration file might not be copied over to `~/.config/`  
-Copy them over:  
-`mkdir ~/.config ~/.config/hypr`  
-`cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf`
