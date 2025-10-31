@@ -68,9 +68,9 @@ Then use `gdisk` to create the following two partitions on your drive:
 **Mount partitions:**
 `$ fdisk -l`                            - list all partitions.  
 `$ mount /dev/nvme0n1p2 /mnt`           - /mnt for root.  
-`$ mkdir /mnt/boot`                     - Create dir for boot
-`$ mount /dev/nvme0n1p1 /mnt/boot`      - /mnt/boot for /boot
-`lsblk`                                 - Verify mountpoints.
+`$ mkdir /mnt/boot`                     - Create dir for boot  
+`$ mount /dev/nvme0n1p1 /mnt/boot`      - /mnt/boot for /boot  
+`lsblk`                                 - Verify mountpoints.  
     
 ---
 
@@ -81,7 +81,7 @@ Then use `gdisk` to create the following two partitions on your drive:
 
 ---
 
-### 4. Generera fstab
+### 4. Genererate fstab
 `$ genfstab -U /mnt >> /mnt/etc/fstab`  - Write auto-mounts to file
 
 `cat /mnt/etc/fstab`                    - Verify UUIDs and mountpoints are correct  
@@ -129,7 +129,7 @@ Set system language support:
 ---
 
 ### 6. Post-install setup.
-- Install necessary packages:
+- Install necessary packages:  
 `sudo pacman -S networkmanager sudo nano`  
 
 - Lock root-user  
