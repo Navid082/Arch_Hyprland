@@ -8,6 +8,7 @@ pacman -Qe <namn>		- visa manuellt installerade paket.
 pacman -Qi <namn>		- visa info om angivet paket  
 nohup <program> >/dev/null 2>&1 &	- Allows program to live when terminal closes
 daemon?
+pactl info?
 
 
 suspend 				- viloläge	- satt alias i bashrc  
