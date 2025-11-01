@@ -10,7 +10,7 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] dysk
 - [X] btop
 - [X] curl
-- [~] dunst - ej konfigurerat.
+- [X] dunst
 
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
@@ -23,7 +23,7 @@ Packages installed later
 - [X] pavucontrol
 - [X] 7zip
 - [X] libreoffice-still
-- [X] eye of gog
+- [X] eye of gnome
 - [X] vim
 - [X] docker
 - [X] git
@@ -32,7 +32,7 @@ Packages installed later
 - [X] kvm/qemu + virt-manager - Ska jag dokumentera detta här eller i egen fil?
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
-- [ ] thunderbird for emails.
+- [X] thunderbird for emails.
 
 
 Other
@@ -274,3 +274,18 @@ pavucontrol.
 There are three services running for sound. Understand this.  
 `systemctl status | grep pipewire`  
 `systemctl status | grep wireplumber`
+
+---
+
+- [X] Tailscale  
+`sudo pacman -Syyu` - Uppdatera paketlistan  
+`sudo pacman -S tailscale` - installera tailscale  
+
+`sudo systemctl enable --now tailscaled` - sätt igång bakgrundsprocessen vid boot  
+`sudo tailscale up` - Anslut din maskin till tailscale nätverket och autentisera i din webbläsare  
+`tailscale ip -4` - Hitta din tailscale ip
+
+---
+
+- [X] SSH  
+https://wiki.archlinux.org/title/OpenSSH
