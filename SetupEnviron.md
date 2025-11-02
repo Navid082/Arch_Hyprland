@@ -1,4 +1,4 @@
-# Setting up the new environment
+'# Setting up the new environment
 This document does not contain any config files. It shows only how I went about setting setting everything up.
 
 
@@ -41,15 +41,10 @@ Other
 
 
 Todo:
-- [ ] wl-clipboard - Går redan klippa och klistra. Behövs detta? 
-- [ ] SWAP (move to archinstallation doc after implementing?)
 - [ ] Power menu
-- [ ] Screenshot: grim (for screenshot) - slurp (for deciding pic borders) - swappy (for editing pic)
 - [ ] Skärmdelning
-- [ ] USB ska kunna gå att läsa
+- [X] USB ska kunna gå att läsa
 - [ ] rsync
-- [ ] ssh
-- [ ] tailscale?
 - [ ] wireshark?
 - [ ] packettracer?
 - [ ] docker
@@ -69,19 +64,20 @@ Copy them over:
 
 ---
 
-- [X] SWAP
-Rekommenderat att det är lika stort som maskinens RAM.  
+- [X] SWAP  
+Setting up swap-file not a swap-partition. To gain benefits of hibernation.  
+Needs as much size as there is RAM. 32GiB RAM = 32GiB swap-file.  
 Kernel kommer försöka komprimera men finns inte garantier att det lyckas.  
 
-Swap-fil är att rekommendera före swap-partitionering eftersom man kan enkelt ändra dess storlek.  
+`mkswap -U clear --size 32G --file /swapfile`   - Skapande 32GiB swapfil                     
+`sudo chmod 600 /swapfile`                      - Säkra filen  
+`sudo swapon /swapfile`                         - Aktivera            
 
-
-Skapande av swapfil för maskin med 32GB RAM:
-`mkswap -U clear --size 32G --file /swapfile`
-
-Lägg till en post för swapfile i fstab för automontering.  
-`nano /etc/fstab`  
-`/swapfile none swap defaults 0 0 `
+`swapon --show`                                 - Verifiera  
+`free -h`  
+  
+`echo "/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab`   - Lägg till en post för swapfile i fstab  
+`cat /etc/fstab`                                - Verifiera  
 
 ---
 
@@ -140,6 +136,16 @@ I set mine to black with keybinding.
 Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:  
 
 `bind = $mainMod, L, exec, swaylock -c 000000`
+
+---
+
+- [X] wl-clipboard - Går redan klippa och klistra.  
+`echo "hej" | wl-copy` - kopierar stdout  
+`wl-paste`  - paste "hej" from clipboard"  
+
+ex:  
+`ls -l | wl-copy`  
+`wl-paste > fil.txt`  
 
 ---
 
@@ -287,5 +293,47 @@ There are three services running for sound. Understand this.
 
 ---
 
-- [X] SSH  
-https://wiki.archlinux.org/title/OpenSSH
+- [~] SSH 
+https://wiki.archlinux.org/title/OpenSSH  
+`sudo pacman -S openssh`  
+`systemctl status sshd` - kolla om tjänsten körs  
+`sudo systemctl enable --now sshd` - starta tjänsten nu och vid boot  
+
+Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
+
+ - WAKE ON LAN  
+Stationära går inte att ansluta till när den är i suspend.  
+Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
+Det går att ansluta när datorn är igång.  
+
+`cat /sys/power/mem_sleep`  
+[s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det.  
+
+---
+
+- [ ] Screenshot:
+- grim (for screenshot)  
+- slurp (for deciding pic borders)  
+- swappy (for editing pic)  
+
+`sudo pacman -S grim slurp swappy wev`      - Installera paketen  
+`mkdir -p ~/.local/bin`                 - Skapa mappen  
+`nano ~/.local/bin/screenshot`          - Skapa filen  med följande innehåll:  
+
+#!/bin/bash
+grim -g "$(slurp)" - | swappy -f -
+
+`chmod +x ~/.local/bin/screenshot`      - Gör den körbar  
+
+**IF It does not work to bind with "Print", bind the print keycode**
+To bind correct keycode to printcreen button.  
+`wev`  
+Press the button. Take note of keycode for print screen when you press it  
+
+set that key to execute the script in hyprland.  
+`bind = , 107, exec, ~/.local/bin/screenshot`   - Button keycode is 107  
+
+
+ bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region 
+
+
