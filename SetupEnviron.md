@@ -11,7 +11,6 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] btop
 - [X] curl
 - [X] dunst
-/etc/dunst/dunstrc ändra monitor till "follow = mouse"
 
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
@@ -34,10 +33,6 @@ Packages installed later
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 - [X] thunderbird for emails.
-- [ ] wireshark?
-- [ ] packettracer?
-- [ ] docker
-
 
 
 Other
@@ -50,8 +45,9 @@ Todo:
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
 - [ ] rsync
-- [ ] GPU passthrough?
-
+- [ ] wireshark?
+- [ ] packettracer?
+- [ ] docker
 
 
 --------------------------------------------------
@@ -297,7 +293,7 @@ There are three services running for sound. Understand this.
 
 ---
 
-- [~] SSH 
+- [X] SSH 
 https://wiki.archlinux.org/title/OpenSSH  
 `sudo pacman -S openssh`  
 `systemctl status sshd` - kolla om tjänsten körs  
@@ -305,7 +301,7 @@ https://wiki.archlinux.org/title/OpenSSH
 
 Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
 
-- [] WAKE ON LAN  
+ - WAKE ON LAN  
 Stationära går inte att ansluta till när den är i suspend.  
 Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
 Det går att ansluta när datorn är igång.  
@@ -315,30 +311,71 @@ Det går att ansluta när datorn är igång.
 
 ---
 
-- [ ] Screenshot: EJ KLAR. Spara knappen fungerar ej.
+- [X] Screenshot:
 - grim (for screenshot)  
 - slurp (for deciding pic borders)  
 - swappy (for editing pic)  
 
-`sudo pacman -S grim slurp swappy wev`      - Installera paketen  
-`mkdir -p ~/.local/bin`                 - Skapa mappen  
-`nano ~/.local/bin/screenshot`          - Skapa filen  med följande innehåll:  
+- Installera paketen
+`sudo pacman -S grim slurp swappy wev`  
 
+- Skapa mappen:  
+`mkdir -p ~/.local/bin`  
+
+- Skapa filen:  
+`nano ~/.local/bin/screenshot`  
+
+- Med följande innehåll:  
 #!/bin/bash
-grim -g "$(slurp)" - | swappy -f -
+grim -g "$(slurp)" - | swappy -f -  
 
-`chmod +x ~/.local/bin/screenshot`      - Gör den körbar  
+- Gör den körbar:  
+`chmod +x ~/.local/bin/screenshot`  
 
-**IF It does not work to bind with "Print", bind the print keycode**
-To bind correct keycode to printcreen button.  
-`wev`  
-Press the button. Take note of keycode for print screen when you press it  
+- Skapa config filen:  
+`touch ~/.config/swappy/config`  
+
+- Med följande innehåll:  
+[Default]
+save_dir=$HOME/Pictures/Screenshots/  
+save_filename_format=swappy-%Y%m%d-%H:%M:%S.png  
+
+Fler parametrar kan sättas. Se repo för exempel:  
+https://github.com/jtheoof/swappy/blob/master/README.md  
+
+
+
 
 set that key to execute the script in hyprland.  
-`bind = , 107, exec, ~/.local/bin/screenshot`   - Button keycode is 107  
+`bind = , 107, exec, ~/.local/bin/screenshot`   - Kan ändra "107" till "Print"  
 
-Examble bind found on reddit:  
-`bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region `
+**IF It does not work to bind with "Print", bind the print keycode**  
+To bind correct keycode to printcreen button. Use `wev`:    
+Press the button. Take note of keycode for print screen when you press it  
 
-Documentation:
-https://man.archlinux.org/man/swappy.1
+Example bind found on reddit:  
+bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region 
+
+
+- [X] Firewall - ufw
+`sudo pacman -S ufw`  
+`sudo systemctl enable --now ufw`  
+
+sudo ufw default deny          # blockera allt utåt som standard  
+sudo ufw allow out on all      # tillåt utgående trafik  
+sudo ufw allow ssh             # tillåt ssh (om du använder det)  
+sudo ufw enable                # aktivera reglerna  
+sudo ufw status verbose        # kolla status  
+
+Reglerna jag har satt:
+  551  sudo ufw reset
+  552  sudo ufw default deny incoming
+  553  sudo ufw default allow outgoing
+  554  sudo ufw allow 22/tcp comment "SSH"
+  555  ssh Navid
+  556  sudo ufw deny 443/tcp
+  557  sudo ufw logging medium
+  558  sudo ufw enable
+  559  sudo ufw status numbered
+
+  SSH fungerar med tailscale utan att explicit ange det. 
