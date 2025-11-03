@@ -11,6 +11,7 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] btop
 - [X] curl
 - [X] dunst
+/etc/dunst/dunstrc ändra monitor till "follow = mouse"
 
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
@@ -33,6 +34,10 @@ Packages installed later
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 - [X] thunderbird for emails.
+- [ ] wireshark?
+- [ ] packettracer?
+- [ ] docker
+
 
 
 Other
@@ -45,9 +50,8 @@ Todo:
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
 - [ ] rsync
-- [ ] wireshark?
-- [ ] packettracer?
-- [ ] docker
+- [ ] GPU passthrough?
+
 
 
 --------------------------------------------------
@@ -301,7 +305,7 @@ https://wiki.archlinux.org/title/OpenSSH
 
 Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
 
- - WAKE ON LAN  
+- [] WAKE ON LAN  
 Stationära går inte att ansluta till när den är i suspend.  
 Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
 Det går att ansluta när datorn är igång.  
@@ -311,7 +315,7 @@ Det går att ansluta när datorn är igång.
 
 ---
 
-- [ ] Screenshot:
+- [ ] Screenshot: EJ KLAR. Spara knappen fungerar ej.
 - grim (for screenshot)  
 - slurp (for deciding pic borders)  
 - swappy (for editing pic)  
@@ -333,7 +337,8 @@ Press the button. Take note of keycode for print screen when you press it
 set that key to execute the script in hyprland.  
 `bind = , 107, exec, ~/.local/bin/screenshot`   - Button keycode is 107  
 
+Examble bind found on reddit:  
+`bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region `
 
- bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region 
-
-
+Documentation:
+https://man.archlinux.org/man/swappy.1
