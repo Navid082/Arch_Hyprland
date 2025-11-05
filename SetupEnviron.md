@@ -2,6 +2,11 @@
 This document does not contain any config files. It shows only how I went about setting setting everything up.
 
 
+
+Take a look inte this:  
+https://github.com/hyprland-community/awesome-hyprland?tab=readme-ov-file
+
+
 ## Setup ##
 Packages installed together with hyprland (See HostArchDocs):
 - [X] alacritty
@@ -9,6 +14,7 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] tree
 - [X] dysk
 - [X] btop
+- [X] glances
 - [X] curl
 - [X] dunst
 
@@ -38,16 +44,20 @@ Packages installed later
 Other
 - [X] Keybinding. Break out your bindings to a seperate file.
 - [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
+- [ ] curl wttr.in - Ska jag lägga till denna i waybar?
+- [X] Lägg till vad för dag det är i waybar klockan.
+
+
 
 
 Todo:
-- [ ] Power menu
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
-- [ ] rsync
-- [ ] wireshark?
+- [ ] Power menu - se 2 script i home foldern.
+
 - [ ] packettracer?
-- [ ] docker
+- [ ] docker - lazydocker  
+    Båda installerade på laptop. Ej lekt med de än
 
 
 --------------------------------------------------
@@ -97,7 +107,7 @@ Straight after greetd tuigreet is set edit bashrc for simple logout
 
 Personally I logout by typing `logout` in the terminal.  
 Do the same by editing `~/.bashrc` and add the following alias:  
-`logout ="hyprctl dispatch exit"`
+`alias logout ="hyprctl dispatch exit"`
 
 --- 
 
@@ -123,14 +133,14 @@ In **~/.config/hypr/autostart.conf** add the following:
 `exec-once = swaybg -c 000000` which will set background to black at login.  
 
 For monitor specific wallpaper:  
-List your monitors: `xrandr --listmonitors` : take note of monitor ID  
+List your monitors: `hyprctl monitors` : take note of monitor ID  
 Mine is set to:  
 `exec-once = swaybg -o DP-1 -i ~/Pictures/Wallpapers/mt3.jpg` # Main screen  
 `exec-once = swaybg -o HDMI-A-1 -c 000000` # Secondary screen  
 
 ---
 
-- [x] swaylock (lockscreen)  
+- [x] swaylock (lockscreen)                         - Might change to hyprlock? https://github.com/hyprwm/hyprlock?tab=readme-ov-file
 Swaylock per default have a bright grey lockscreen.
 I set mine to black with keybinding.  
 Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:  
@@ -270,10 +280,10 @@ systemctl --user enable --now pipewire pipewire-pulse wireplumber
 systemctl --user restart pipewire wireplumber
 
 pactl list cards | grep -A2 "bluez_card"
-pavucontrol.
+pavucontrol  
 
-  496  pactl list cards | grep -A15 "bluez_card"
-  497  pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink
+pactl list cards | grep -A15 "bluez_card"  
+pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink  
 
 
 # Check `systemctl status`  
@@ -294,14 +304,14 @@ There are three services running for sound. Understand this.
 ---
 
 - [X] SSH 
-https://wiki.archlinux.org/title/OpenSSH  
+https://wiki.archlinux.org/title/OpenSSH              - LÄGG TILL HARDENING  
 `sudo pacman -S openssh`  
 `systemctl status sshd` - kolla om tjänsten körs  
 `sudo systemctl enable --now sshd` - starta tjänsten nu och vid boot  
 
 Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
 
- - WAKE ON LAN  
+- [ ] WAKE ON LAN  
 Stationära går inte att ansluta till när den är i suspend.  
 Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
 Det går att ansluta när datorn är igång.  
@@ -361,21 +371,29 @@ bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Scr
 `sudo pacman -S ufw`  
 `sudo systemctl enable --now ufw`  
 
-sudo ufw default deny          # blockera allt utåt som standard  
-sudo ufw allow out on all      # tillåt utgående trafik  
-sudo ufw allow ssh             # tillåt ssh (om du använder det)  
-sudo ufw enable                # aktivera reglerna  
-sudo ufw status verbose        # kolla status  
+Min konfiguration:  
+sudo ufw reset  
+sudo ufw default deny incoming  
+sudo ufw default allow outgoing  
+sudo ufw enable  
+udo ufw status verbose  
 
-Reglerna jag har satt:
-  551  sudo ufw reset
-  552  sudo ufw default deny incoming
-  553  sudo ufw default allow outgoing
-  554  sudo ufw allow 22/tcp comment "SSH"
-  555  ssh Navid
-  556  sudo ufw deny 443/tcp
-  557  sudo ufw logging medium
-  558  sudo ufw enable
-  559  sudo ufw status numbered
+SSH fungerar med tailscale utan att explicit öppna porten. 
 
-  SSH fungerar med tailscale utan att explicit ange det. 
+
+
+
+- [ ] rsync
+Install rsync 
+
+
+- [X] yay and pacseek  
+`git clone https://aur.archlinux.org/yay.git`  
+`cd yay`  
+`makepkg -si`  
+
+`yay -S pacseek`  # CLI based pacman manager
+
+
+
+
