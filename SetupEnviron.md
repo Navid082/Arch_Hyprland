@@ -119,8 +119,7 @@ Do the same by editing `~/.bashrc` and add the following alias:
 
 --- 
 
-- [x] waybar  (statusbar)
-
+- [x] waybar  
 Config files not in homefolder, copy them there:  
 `mkdir -p ~/.config/waybar`  
 `cp /etc/xdg/waybar/config ~/.config/waybar/`  
@@ -128,13 +127,16 @@ Config files not in homefolder, copy them there:
 
 create a new file in **~/.config/hypr/:**  
 `nano autostart.conf` with the following content:  
-`exec-once = waybar`
+`exec-once = waybar`  
 
 In **~/.config/hypr/hyprland.conf**, under the segment "Autostart" write:  
 `source = ~/.config/hypr/autostart.conf`  
-This will autostart waybar whenever hyprland executes. i.e when logging in.
+This will autostart waybar whenever hyprland executes. i.e when logging in.  
 
 ---
+
+- [ ] hyprpanel
+1. Download dependencies
 
 - [x] swaybg (wallpaper)
 In **~/.config/hypr/autostart.conf** add the following:  
