@@ -1,5 +1,10 @@
-# Setting up the new environment
+'# Setting up the new environment
 This document does not contain any config files. It shows only how I went about setting setting everything up.
+
+
+
+Take a look inte this:  
+https://github.com/hyprland-community/awesome-hyprland?tab=readme-ov-file
 
 
 ## Setup ##
@@ -9,8 +14,9 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] tree
 - [X] dysk
 - [X] btop
+- [X] glances
 - [X] curl
-- [~] dunst - ej konfigurerat.
+- [X] dunst
 
 waybar and wofi are configured below. Config files are not explored here.
 Dunst is installed but not configured.
@@ -22,7 +28,8 @@ Packages installed later
 - [X] spotify
 - [X] pavucontrol
 - [X] 7zip
-- [X] eye of gog
+- [X] libreoffice-still
+- [X] eye of gnome
 - [X] vim
 - [X] docker
 - [X] git
@@ -31,28 +38,56 @@ Packages installed later
 - [X] kvm/qemu + virt-manager - Ska jag dokumentera detta här eller i egen fil?
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
-- [ ] thunderbird for emails.
+- [X] thunderbird for emails.
 
 
 Other
 - [X] Keybinding. Break out your bindings to a seperate file.
 - [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
+- [ ] curl wttr.in - Ska jag lägga till denna i waybar?
+- [X] Lägg till vad för dag det är i waybar klockan.
+
+
 
 
 Todo:
-- [ ] wl-clipboard - Går redan klippa och klistra. Behövs detta? 
-- [ ] SWAP (move to archinstallation doc after implementing?)
-- [ ] Power menu
-- [ ] Screenshot: grim (for screenshot) - slurp (for deciding pic borders) - swappy (for editing pic)
 - [ ] Skärmdelning
-- [ ] USB ska kunna gå att läsa
-- [ ] rsync
-- [ ] ssh
-- [ ] tailscale?
-- [ ] wireshark?
-- [ ] packettracer?
-- [ ] docker
+- [X] USB ska kunna gå att läsa
+- [ ] Power menu - se 2 script i home foldern.
 
+- [ ] packettracer?
+- [ ] docker - lazydocker  
+    Båda installerade på laptop. Ej lekt med de än
+
+
+--------------------------------------------------
+- [X] Hyprland
+- Install packages:  
+`$ sudo pacman -S hyprland waybar dunst wofi alacritty tldr tree dysk btop curl eza`  
+Choose `pipewire-jack` when prompted.
+
+- Configuration file  
+Default configuration file might not be copied over to `~/.config/`  
+Copy them over:  
+`mkdir ~/.config ~/.config/hypr`  
+`cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf`
+
+---
+
+- [X] SWAP  
+Setting up swap-file not a swap-partition. To gain benefits of hibernation.  
+Needs as much size as there is RAM. 32GiB RAM = 32GiB swap-file.  
+Kernel kommer försöka komprimera men finns inte garantier att det lyckas.  
+
+`mkswap -U clear --size 32G --file /swapfile`   - Skapande 32GiB swapfil                     
+`sudo chmod 600 /swapfile`                      - Säkra filen  
+`sudo swapon /swapfile`                         - Aktivera            
+
+`swapon --show`                                 - Verifiera  
+`free -h`  
+  
+`echo "/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab`   - Lägg till en post för swapfile i fstab  
+`cat /etc/fstab`                                - Verifiera  
 
 ---
 
@@ -72,7 +107,7 @@ Straight after greetd tuigreet is set edit bashrc for simple logout
 
 Personally I logout by typing `logout` in the terminal.  
 Do the same by editing `~/.bashrc` and add the following alias:  
-`logout ="hyprctl dispatch exit"`
+`alias logout ="hyprctl dispatch exit"`
 
 --- 
 
@@ -98,19 +133,29 @@ In **~/.config/hypr/autostart.conf** add the following:
 `exec-once = swaybg -c 000000` which will set background to black at login.  
 
 For monitor specific wallpaper:  
-List your monitors: `xrandr --listmonitors` : take note of monitor ID  
+List your monitors: `hyprctl monitors` : take note of monitor ID  
 Mine is set to:  
 `exec-once = swaybg -o DP-1 -i ~/Pictures/Wallpapers/mt3.jpg` # Main screen  
 `exec-once = swaybg -o HDMI-A-1 -c 000000` # Secondary screen  
 
 ---
 
-- [x] swaylock (lockscreen)  
+- [x] swaylock (lockscreen)                         - Might change to hyprlock? https://github.com/hyprwm/hyprlock?tab=readme-ov-file
 Swaylock per default have a bright grey lockscreen.
 I set mine to black with keybinding.  
 Edit `**~/.config/hypr/hyprland** under **KEYBINDS** add the follwing:  
 
 `bind = $mainMod, L, exec, swaylock -c 000000`
+
+---
+
+- [X] wl-clipboard - Går redan klippa och klistra.  
+`echo "hej" | wl-copy` - kopierar stdout  
+`wl-paste`  - paste "hej" from clipboard"  
+
+ex:  
+`ls -l | wl-copy`  
+`wl-paste > fil.txt`  
 
 ---
 
@@ -235,13 +280,120 @@ systemctl --user enable --now pipewire pipewire-pulse wireplumber
 systemctl --user restart pipewire wireplumber
 
 pactl list cards | grep -A2 "bluez_card"
-pavucontrol.
+pavucontrol  
 
-  496  pactl list cards | grep -A15 "bluez_card"
-  497  pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink
+pactl list cards | grep -A15 "bluez_card"  
+pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink  
 
 
 # Check `systemctl status`  
 There are three services running for sound. Understand this.  
 `systemctl status | grep pipewire`  
 `systemctl status | grep wireplumber`
+
+---
+
+- [X] Tailscale  
+`sudo pacman -Syyu` - Uppdatera paketlistan  
+`sudo pacman -S tailscale` - installera tailscale  
+
+`sudo systemctl enable --now tailscaled` - sätt igång bakgrundsprocessen vid boot  
+`sudo tailscale up` - Anslut din maskin till tailscale nätverket och autentisera i din webbläsare  
+`tailscale ip -4` - Hitta din tailscale ip
+
+---
+
+- [X] SSH 
+https://wiki.archlinux.org/title/OpenSSH              - LÄGG TILL HARDENING  
+`sudo pacman -S openssh`  
+`systemctl status sshd` - kolla om tjänsten körs  
+`sudo systemctl enable --now sshd` - starta tjänsten nu och vid boot  
+
+Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
+
+- [ ] WAKE ON LAN  
+Stationära går inte att ansluta till när den är i suspend.  
+Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
+Det går att ansluta när datorn är igång.  
+
+`cat /sys/power/mem_sleep`  
+[s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det.  
+
+---
+
+- [X] Screenshot:
+- grim (for screenshot)  
+- slurp (for deciding pic borders)  
+- swappy (for editing pic)  
+
+- Installera paketen
+`sudo pacman -S grim slurp swappy wev`  
+
+- Skapa mappen:  
+`mkdir -p ~/.local/bin`  
+
+- Skapa filen:  
+`nano ~/.local/bin/screenshot`  
+
+- Med följande innehåll:  
+#!/bin/bash
+grim -g "$(slurp)" - | swappy -f -  
+
+- Gör den körbar:  
+`chmod +x ~/.local/bin/screenshot`  
+
+- Skapa config filen:  
+`touch ~/.config/swappy/config`  
+
+- Med följande innehåll:  
+[Default]
+save_dir=$HOME/Pictures/Screenshots/  
+save_filename_format=swappy-%Y%m%d-%H:%M:%S.png  
+
+Fler parametrar kan sättas. Se repo för exempel:  
+https://github.com/jtheoof/swappy/blob/master/README.md  
+
+
+
+
+set that key to execute the script in hyprland.  
+`bind = , 107, exec, ~/.local/bin/screenshot`   - Kan ändra "107" till "Print"  
+
+**IF It does not work to bind with "Print", bind the print keycode**  
+To bind correct keycode to printcreen button. Use `wev`:    
+Press the button. Take note of keycode for print screen when you press it  
+
+Example bind found on reddit:  
+bind =, Print, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region 
+
+
+- [X] Firewall - ufw
+`sudo pacman -S ufw`  
+`sudo systemctl enable --now ufw`  
+
+Min konfiguration:  
+sudo ufw reset  
+sudo ufw default deny incoming  
+sudo ufw default allow outgoing  
+sudo ufw enable  
+udo ufw status verbose  
+
+SSH fungerar med tailscale utan att explicit öppna porten. 
+
+
+
+
+- [ ] rsync
+Install rsync 
+
+
+- [X] yay and pacseek  
+`git clone https://aur.archlinux.org/yay.git`  
+`cd yay`  
+`makepkg -si`  
+
+`yay -S pacseek`  # CLI based pacman manager
+
+
+
+
