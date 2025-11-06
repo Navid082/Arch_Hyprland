@@ -48,12 +48,20 @@ Other
 - [X] Lägg till vad för dag det är i waybar klockan.
 
 
-
-
 Todo:
+- [~] waybar configured but swapped with hyprpanel.
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
 - [ ] Power menu - se 2 script i home foldern.
+- [ ] rsync
+- [ ] WAKE ON LAN:  
+        Stationära går inte att ansluta till när den är i suspend.  
+        Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
+        Det går att ansluta när datorn är igång.  
+
+        `cat /sys/power/mem_sleep`  
+        [s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det. 
+
 
 - [ ] packettracer?
 - [ ] docker - lazydocker  
@@ -285,8 +293,7 @@ pavucontrol
 pactl list cards | grep -A15 "bluez_card"  
 pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink  
 
-
-# Check `systemctl status`  
+- Check `systemctl status`  
 There are three services running for sound. Understand this.  
 `systemctl status | grep pipewire`  
 `systemctl status | grep wireplumber`
@@ -309,15 +316,7 @@ https://wiki.archlinux.org/title/OpenSSH              - LÄGG TILL HARDENING
 `systemctl status sshd` - kolla om tjänsten körs  
 `sudo systemctl enable --now sshd` - starta tjänsten nu och vid boot  
 
-Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
-
-- [ ] WAKE ON LAN  
-Stationära går inte att ansluta till när den är i suspend.  
-Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
-Det går att ansluta när datorn är igång.  
-
-`cat /sys/power/mem_sleep`  
-[s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det.  
+Paketet behöver installeras och köras på båda maskiner för att det ska fungera.   
 
 ---
 
@@ -380,12 +379,7 @@ udo ufw status verbose
 
 SSH fungerar med tailscale utan att explicit öppna porten. 
 
-
-
-
-- [ ] rsync
-Install rsync 
-
+---
 
 - [X] yay and pacseek  
 `git clone https://aur.archlinux.org/yay.git`  

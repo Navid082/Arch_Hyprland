@@ -1,0 +1,6 @@
+Weather:
+The default weather temp is wrong for my location.
+Per docuementation add api key from: into hyprpanel settings.
+https://www.weatherapi.com/my/
+
+93ccd87fc7c5499d9e0220526250511
