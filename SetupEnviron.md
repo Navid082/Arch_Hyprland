@@ -2,7 +2,6 @@
 This document does not contain any config files. It shows only how I went about setting setting everything up.
 
 
-
 Take a look inte this:  
 https://github.com/hyprland-community/awesome-hyprland?tab=readme-ov-file
 
@@ -44,7 +43,7 @@ Packages installed later
 Other
 - [X] Keybinding. Break out your bindings to a seperate file.
 - [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
-- [ ] curl wttr.in - Ska jag lägga till denna i waybar?
+- [~] curl wttr.in - Ska jag lägga till denna i waybar? (Inkluderat med hyprpanel)
 - [X] Lägg till vad för dag det är i waybar klockan.
 
 
@@ -52,8 +51,19 @@ Todo:
 - [~] waybar configured but swapped with hyprpanel.
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
-- [ ] Power menu - se 2 script i home foldern.
-- [ ] rsync
+- [~] Power menu - se 2 script i home foldern. Includerat med hyprpanel
+- [X] rsync  
+    [X] grsync (gui)
+- [X] docker 
+    [X] lazydocker  
+    Båda installerade på laptop. Ej lekt med de än
+- [X] git
+    [X] lazygit
+- [X] pacseek
+- [ ] trashcan: https://wiki.archlinux.org/title/Trash_management
+
+
+
 - [ ] WAKE ON LAN:  
         Stationära går inte att ansluta till när den är i suspend.  
         Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
@@ -62,10 +72,6 @@ Todo:
         `cat /sys/power/mem_sleep`  
         [s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det. 
 
-
-- [ ] packettracer?
-- [ ] docker - lazydocker  
-    Båda installerade på laptop. Ej lekt med de än
 
 
 --------------------------------------------------
