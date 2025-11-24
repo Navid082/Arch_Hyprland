@@ -2,7 +2,6 @@
 This document does not contain any config files. It shows only how I went about setting setting everything up.
 
 
-
 Take a look inte this:  
 https://github.com/hyprland-community/awesome-hyprland?tab=readme-ov-file
 
@@ -44,20 +43,35 @@ Packages installed later
 Other
 - [X] Keybinding. Break out your bindings to a seperate file.
 - [X] Grub. changed to menu style hidden and timeout to 0 for faster boot process.
-- [ ] curl wttr.in - Ska jag lägga till denna i waybar?
+- [~] curl wttr.in - Ska jag lägga till denna i waybar? (Inkluderat med hyprpanel)
 - [X] Lägg till vad för dag det är i waybar klockan.
 
 
-
-
 Todo:
+- [~] waybar configured but swapped with hyprpanel.
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
-- [ ] Power menu - se 2 script i home foldern.
-
-- [ ] packettracer?
-- [ ] docker - lazydocker  
+- [~] Power menu - se 2 script i home foldern. Includerat med hyprpanel
+- [X] rsync  
+    [X] grsync (gui)
+- [X] docker 
+    [X] lazydocker  
     Båda installerade på laptop. Ej lekt med de än
+- [X] git
+    [X] lazygit
+- [X] pacseek
+- [ ] trashcan: https://wiki.archlinux.org/title/Trash_management
+
+
+
+- [ ] WAKE ON LAN:  
+        Stationära går inte att ansluta till när den är i suspend.  
+        Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
+        Det går att ansluta när datorn är igång.  
+
+        `cat /sys/power/mem_sleep`  
+        [s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det. 
+
 
 
 --------------------------------------------------
@@ -111,8 +125,7 @@ Do the same by editing `~/.bashrc` and add the following alias:
 
 --- 
 
-- [x] waybar  (statusbar)
-
+- [x] waybar  
 Config files not in homefolder, copy them there:  
 `mkdir -p ~/.config/waybar`  
 `cp /etc/xdg/waybar/config ~/.config/waybar/`  
@@ -120,13 +133,16 @@ Config files not in homefolder, copy them there:
 
 create a new file in **~/.config/hypr/:**  
 `nano autostart.conf` with the following content:  
-`exec-once = waybar`
+`exec-once = waybar`  
 
 In **~/.config/hypr/hyprland.conf**, under the segment "Autostart" write:  
 `source = ~/.config/hypr/autostart.conf`  
-This will autostart waybar whenever hyprland executes. i.e when logging in.
+This will autostart waybar whenever hyprland executes. i.e when logging in.  
 
 ---
+
+- [ ] hyprpanel
+1. Download dependencies
 
 - [x] swaybg (wallpaper)
 In **~/.config/hypr/autostart.conf** add the following:  
@@ -285,8 +301,7 @@ pavucontrol
 pactl list cards | grep -A15 "bluez_card"  
 pactl set-card-profile bluez_card.F4_4E_FC_87_DD_5D a2dp-sink  
 
-
-# Check `systemctl status`  
+- Check `systemctl status`  
 There are three services running for sound. Understand this.  
 `systemctl status | grep pipewire`  
 `systemctl status | grep wireplumber`
@@ -309,15 +324,7 @@ https://wiki.archlinux.org/title/OpenSSH              - LÄGG TILL HARDENING
 `systemctl status sshd` - kolla om tjänsten körs  
 `sudo systemctl enable --now sshd` - starta tjänsten nu och vid boot  
 
-Paketet behöver installeras och köras på båda maskiner för att det ska fungera.  
-
-- [ ] WAKE ON LAN  
-Stationära går inte att ansluta till när den är i suspend.  
-Satt wake on till "g". Men den sover för djupt. Nätverkskortet stängs av.  
-Det går att ansluta när datorn är igång.  
-
-`cat /sys/power/mem_sleep`  
-[s2idle] deep   -> detta är problemet. Shallow sleep kommer lösa det.  
+Paketet behöver installeras och köras på båda maskiner för att det ska fungera.   
 
 ---
 
@@ -380,12 +387,7 @@ udo ufw status verbose
 
 SSH fungerar med tailscale utan att explicit öppna porten. 
 
-
-
-
-- [ ] rsync
-Install rsync 
-
+---
 
 - [X] yay and pacseek  
 `git clone https://aur.archlinux.org/yay.git`  
