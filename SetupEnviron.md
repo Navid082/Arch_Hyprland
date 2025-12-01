@@ -13,6 +13,7 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] tree
 - [X] dysk
 - [X] btop
+    - [X] rocm-smi - (AMD) for displaying gpu in btop  
 - [X] glances
 - [X] curl
 - [X] dunst
@@ -53,14 +54,14 @@ Todo:
 - [X] USB ska kunna gå att läsa
 - [~] Power menu - se 2 script i home foldern. Includerat med hyprpanel
 - [X] rsync  
-    [X] grsync (gui)
-- [X] docker 
+§- [X] docker 
     [X] lazydocker  
     Båda installerade på laptop. Ej lekt med de än
 - [X] git
     [X] lazygit
 - [X] pacseek
 - [ ] trashcan: https://wiki.archlinux.org/title/Trash_management
+- [ ] Disk usage. See file/map sizes etc. GUI or TUI.
 
 
 
@@ -141,8 +142,9 @@ This will autostart waybar whenever hyprland executes. i.e when logging in.
 
 ---
 
-- [ ] hyprpanel
-1. Download dependencies
+- [X] hyprpanel
+Basic install. Set to autostart through hyprland config.
+Added api key for weather request
 
 - [x] swaybg (wallpaper)
 In **~/.config/hypr/autostart.conf** add the following:  
