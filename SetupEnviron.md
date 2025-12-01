@@ -13,6 +13,7 @@ Packages installed together with hyprland (See HostArchDocs):
 - [X] tree
 - [X] dysk
 - [X] btop
+    - [X] rocm-smi - (AMD) for displaying gpu in btop  
 - [X] glances
 - [X] curl
 - [X] dunst
@@ -53,7 +54,7 @@ Todo:
 - [X] USB ska kunna gå att läsa
 - [~] Power menu - se 2 script i home foldern. Includerat med hyprpanel
 - [X] rsync  
-- [X] docker 
+§- [X] docker 
     [X] lazydocker  
     Båda installerade på laptop. Ej lekt med de än
 - [X] git
