@@ -40,7 +40,8 @@ Packages installed later
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 - [X] thunderbird for emails.
 - [X] Steam
-- [X] Heroic Games Launcher 
+- [X] Heroic Games Launcher
+- [X] AppImageLauncher 
 
 
 Other
