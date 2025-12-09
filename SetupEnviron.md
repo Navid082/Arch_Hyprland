@@ -39,6 +39,8 @@ Packages installed later
 - [X] pipewire pipewire-pulse pipewire-alsa wireplumber
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 - [X] thunderbird for emails.
+- [X] Steam
+- [X] Heroic Games Launcher 
 
 
 Other
@@ -190,19 +192,6 @@ Tried Omarchy, liked how it displayed `ls`. I did the same.
 1. Install eza.  
 2. Add the following alias to `~/.bashrc`:
 alias ls="eza -lh --group-directories-first --icons=auto"
-
----
-
-- [x] Steam (multilib)  
-The game I mostly play is Heroes of Newerth. Though it does not have Linux support at all  
-I decided to try to make it work with steams proton. Which it did.  
-1. Install Steam.
-2. Added the installer through `add a non steam game` and installed the game.  
-Had to try different proton versions to finally make it work. `Proton Experimental` did the trick.  
-3. Since installer is still set as the target executable. I changed it to `launcher.exe` by right-clicking on the game in the library and finding where the `launcher.exe` is installed.  
-The right directory was found here:  
-`~/.steam/steam/steamapps/compdata/<app-id>/pfx/drive_c/ProgramFiles/Heroes of Newerth/`  
-4. Had som issues but by adding `PROTON_USE_WINED3D=1 %command%` to launch options it was finally done.
 
 ---
 
