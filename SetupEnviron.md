@@ -41,8 +41,8 @@ Packages installed later
 - [X] thunderbird for emails.
 - [X] Steam
 - [X] Heroic Games Launcher
-- [X] AppImageLauncher 
-
+- [X] AppImageLauncher
+- [X] Todoist 
 
 Other
 - [X] Keybinding. Break out your bindings to a seperate file.
