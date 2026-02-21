@@ -60,6 +60,11 @@ Todo:
 - [X] hyprpanel.
       Install dependencies. Then hyprpanel. Follow the docs:
       https://hyprpanel.com/getting_started/installation.html
+
+      Add hyprpanel to autostart in hyprland.config
+      Set scale to preference.
+      Set weather api
+      Change workspace icons to numbers and make them monitor specifik
       
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
