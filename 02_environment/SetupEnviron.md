@@ -46,6 +46,8 @@ Packages installed later
       `#Include = /etc/pacman.d/mirrorlist`
       
 - [X] Heroic Games Launcher
+      downloaded from aur repository
+      `yay -S heroic-games-launcher`
 - [X] AppImageLauncher
 - [X] Todoist 
 
