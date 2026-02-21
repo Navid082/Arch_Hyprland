@@ -40,6 +40,9 @@ Packages installed later
 - [X] thunar - set to dark mode in hyprland.conf https://wiki.archlinux.org/title/GTK
 - [X] thunderbird for emails.
 - [X] Steam
+      Enable multilib repo and install steam
+      Uncomment the line:
+      `#Include = /etc/pacman.d/mirrorlist`
 - [X] Heroic Games Launcher
 - [X] AppImageLauncher
 - [X] Todoist 
