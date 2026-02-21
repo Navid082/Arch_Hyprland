@@ -381,8 +381,10 @@ SSH fungerar med tailscale utan att explicit öppna porten.
 
 ---
 
-- [X] yay and pacseek  
-`git clone https://aur.archlinux.org/yay.git`  
+- [X] yay and pacseek
+Clone yay repo
+`git clone https://aur.archlinux.org/yay.git`
+Ensure `base-devel` is installed.
 `cd yay`  
 `makepkg -si`  
 
