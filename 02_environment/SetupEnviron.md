@@ -57,7 +57,10 @@ Other
 
 
 Todo:
-- [~] waybar configured but swapped with hyprpanel.
+- [X] hyprpanel.
+      Install dependencies. Then hyprpanel. Follow the docs:
+      https://hyprpanel.com/getting_started/installation.html
+      
 - [ ] Skärmdelning
 - [X] USB ska kunna gå att läsa
 - [~] Power menu - se 2 script i home foldern. Includerat med hyprpanel
@@ -394,6 +397,7 @@ Ensure `base-devel` is installed.
 `makepkg -si`  
 
 `yay -S pacseek`  # CLI based pacman manager
+
 
 
 
