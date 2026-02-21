@@ -41,8 +41,10 @@ Packages installed later
 - [X] thunderbird for emails.
 - [X] Steam
       Enable multilib repo and install steam
-      Uncomment the line:
+      Uncomment theese lines:
+      `#[multilib]`
       `#Include = /etc/pacman.d/mirrorlist`
+      
 - [X] Heroic Games Launcher
 - [X] AppImageLauncher
 - [X] Todoist 
